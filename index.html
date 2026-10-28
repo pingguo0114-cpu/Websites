@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OVEN 09 — 아침 9시, 첫 오븐이 열리는 베이커리</title>
+  <meta name="description" content="OVEN 09는 매일 아침 9시에 첫 빵을 꺼내는 동네 베이커리 카페입니다. 크루아상, 사워도우, 우유식빵과 커피.">
+  <meta name="theme-color" content="#F5EEE3">
+  <link rel="preload" as="image" href="images/latte-almond-croissant.webp" imagesrcset="images/latte-almond-croissant-sm.webp 800w, images/latte-almond-croissant.webp 1600w" imagesizes="(min-width: 960px) 58vw, 100vw">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#top" aria-label="OVEN 09 홈">
+        <span class="logo-mark">OVEN 09</span>
+        <span class="logo-sub">bakery &amp; coffee</span>
+      </a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="#about">소개</a>
+        <a href="#menu">메뉴</a>
+        <a href="#visit">오시는 길</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#reserve">예약</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">OPEN 09:00 · 첫 빵이 나오는 시간</p>
+          <h1>아침 9시,<br>첫 오븐이 열립니다</h1>
+          <p class="lead">버터 향이 밴 크루아상과 천천히 내린 커피. 볕 드는 창가 자리는 미리 예약하고 오세요.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#reserve">창가 자리 예약하기</a>
+            <a class="btn btn-quiet" href="#menu">오늘의 빵 보기 →</a>
+          </div>
+        </div>
+        <figure class="hero-photo">
+          <img src="images/latte-almond-croissant.webp"
+               srcset="images/latte-almond-croissant-sm.webp 800w, images/latte-almond-croissant.webp 1600w"
+               sizes="(min-width: 960px) 58vw, 100vw"
+               width="1600" height="1068"
+               alt="나무 테이블 위의 라떼와 아몬드 크루아상">
+        </figure>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="container about-inner">
+        <figure class="about-photo">
+          <img src="images/window-seats-sm.webp"
+               srcset="images/window-seats-sm.webp 800w, images/window-seats.webp 1600w"
+               sizes="(min-width: 960px) 50vw, 100vw"
+               width="1600" height="1068" loading="lazy"
+               alt="원목 격자 창 아래 바 테이블과 나무 의자가 놓인 매장">
+        </figure>
+        <div class="about-text">
+          <p class="eyebrow">ABOUT</p>
+          <h2 id="about-title">볕 좋은 창가,<br>작은 빵집</h2>
+          <p>새벽부터 반죽을 접고, 아침 9시에 첫 빵을 꺼냅니다. 그날 구운 빵은 그날 팝니다. 다 팔리면 조금 일찍 문을 닫기도 해요.</p>
+          <p>창가 바 테이블은 노트북보다 책이 잘 어울리는 자리예요. 빵 한 조각, 커피 한 잔으로 오래 앉아 계셔도 괜찮습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu -->
+    <section class="section menu" id="menu" aria-labelledby="menu-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">MENU</p>
+          <h2 id="menu-title">오늘 구운 빵</h2>
+          <p class="section-note">가격 단위: 천 원</p>
+        </div>
+
+        <ul class="feature-grid" role="list">
+          <li class="feature">
+            <img src="images/croissants-rack-sm.webp" width="800" height="534" loading="lazy" alt="식힘망 위에 놓인 갓 구운 크루아상들">
+            <div class="price-card" style="--tilt:-1.5deg">
+              <span class="price-name">버터 크루아상</span>
+              <span class="price-desc">프랑스 버터로 27겹</span>
+              <span class="price">4.8</span>
+            </div>
+          </li>
+          <li class="feature">
+            <img src="images/sourdough-sm.webp" width="800" height="534" loading="lazy" alt="리넨 천 위에 반으로 찢은 사워도우 단면">
+            <div class="price-card" style="--tilt:1deg">
+              <span class="price-name">시골 사워도우</span>
+              <span class="price-desc">48시간 천천히 발효</span>
+              <span class="price">8.5</span>
+            </div>
+          </li>
+          <li class="feature">
+            <img src="images/milk-bread-shelf-sm.webp" width="800" height="534" loading="lazy" alt="나무 선반에 줄지어 놓인 우유식빵">
+            <div class="price-card" style="--tilt:-0.5deg">
+              <span class="price-name">우유 식빵</span>
+              <span class="price-desc">결대로 찢어 먹는 한 덩이</span>
+              <span class="price">7.5</span>
+            </div>
+          </li>
+          <li class="feature">
+            <img src="images/pistachio-cake-sm.webp" width="800" height="534" loading="lazy" alt="크림색 접시 위의 피스타치오 크림 케이크 한 조각">
+            <div class="price-card" style="--tilt:1.5deg">
+              <span class="badge">NEW</span>
+              <span class="price-name">피스타치오 케이크</span>
+              <span class="price-desc">시칠리아 피스타치오 크림</span>
+              <span class="price">8.8</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="menu-lists">
+          <div class="menu-group">
+            <h3>빵</h3>
+            <ul role="list">
+              <li><span>버터 크루아상</span><span>4.8</span></li>
+              <li><span>아몬드 크루아상</span><span>5.8</span></li>
+              <li><span>소금빵</span><span>3.8</span></li>
+              <li><span>바게트</span><span>5.2</span></li>
+              <li><span>우유 식빵</span><span>7.5</span></li>
+              <li><span>시골 사워도우</span><span>8.5</span></li>
+            </ul>
+          </div>
+          <div class="menu-group">
+            <h3>디저트</h3>
+            <ul role="list">
+              <li><span>피스타치오 케이크 <span class="badge badge-inline">NEW</span></span><span>8.8</span></li>
+              <li><span>바스크 치즈케이크</span><span>7.8</span></li>
+              <li><span>바닐라 까눌레</span><span>4.2</span></li>
+              <li><span>시나몬 롤</span><span>5.5</span></li>
+            </ul>
+          </div>
+          <div class="menu-group">
+            <h3>커피 · 음료</h3>
+            <ul role="list">
+              <li><span>아메리카노</span><span>5.0</span></li>
+              <li><span>카페 라떼</span><span>5.8</span></li>
+              <li><span>바닐라빈 라떼</span><span>6.5</span></li>
+              <li><span>오늘의 핸드드립</span><span>7.0</span></li>
+              <li><span>얼그레이 밀크티</span><span>6.8</span></li>
+              <li><span>자몽 에이드</span><span>6.8</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visit -->
+    <section class="section visit" id="visit" aria-labelledby="visit-title">
+      <div class="container visit-inner">
+        <div class="visit-text">
+          <p class="eyebrow">VISIT</p>
+          <h2 id="visit-title">오시는 길</h2>
+          <dl class="info-list">
+            <div class="info-row">
+              <dt>
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+                주소
+              </dt>
+              <dd>인천광역시 동아구 중앙아진대로 278<br><span class="muted">가상 주소예요</span></dd>
+            </div>
+            <div class="info-row">
+              <dt>
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                영업시간
+              </dt>
+              <dd>
+                <table class="hours">
+                  <caption class="sr-only">요일별 영업시간</caption>
+                  <tbody>
+                    <tr data-days="2,3,4"><th scope="row">화 – 목</th><td>09:00 – 19:00</td></tr>
+                    <tr data-days="5,6,0"><th scope="row">금 – 일</th><td>09:00 – 21:00</td></tr>
+                    <tr data-days="1"><th scope="row">월</th><td>정기 휴무</td></tr>
+                  </tbody>
+                </table>
+              </dd>
+            </div>
+            <div class="info-row">
+              <dt>
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                전화
+              </dt>
+              <!-- 예시 번호: 실제 고객 작업 시 교체 -->
+              <dd><a href="tel:0320000909">032-000-0909</a></dd>
+            </div>
+          </dl>
+          <p class="today" id="today-status" hidden></p>
+        </div>
+        <div class="map-card" role="img" aria-label="약도: 중앙아진대로 사거리 모퉁이, 1층">
+          <span class="map-road map-road-h"></span>
+          <span class="map-road map-road-v"></span>
+          <span class="map-pin">OVEN 09</span>
+          <span class="map-label map-label-h">중앙아진대로</span>
+          <span class="map-label map-label-note">사거리 모퉁이 1층</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reserve -->
+    <section class="section reserve" id="reserve" aria-labelledby="reserve-title">
+      <div class="container reserve-inner">
+        <div class="reserve-text">
+          <p class="eyebrow">RESERVATION</p>
+          <h2 id="reserve-title">창가 자리 예약</h2>
+          <p>창가 바 테이블은 하루 네 번, 두 시간씩 예약을 받아요. 빵 예약은 전날 저녁 6시까지 전화로 부탁드려요.</p>
+        </div>
+        <form class="reserve-form" id="reserve-form" novalidate>
+          <div class="field">
+            <label for="r-date">날짜</label>
+            <input id="r-date" name="date" type="date" required>
+          </div>
+          <div class="field">
+            <label for="r-time">시간</label>
+            <select id="r-time" name="time" required>
+              <option value="">선택해 주세요</option>
+              <option>09:00 – 11:00</option>
+              <option>11:00 – 13:00</option>
+              <option>14:00 – 16:00</option>
+              <option>16:00 – 18:00</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-people">인원</label>
+            <select id="r-people" name="people" required>
+              <option>1명</option>
+              <option selected>2명</option>
+              <option>3명</option>
+              <option>4명</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-phone">연락처</label>
+            <input id="r-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" required>
+          </div>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <button class="btn btn-primary btn-block" type="submit">예약 요청하기</button>
+          <p class="form-done" id="form-done" role="status" hidden></p>
+          <p class="form-alt">전화 예약 <a href="tel:0320000909">032-000-0909</a></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="logo-mark">OVEN 09</p>
+        <p class="muted">인천광역시 동아구 중앙아진대로 278<br>화–목 09:00–19:00 · 금–일 09:00–21:00 · 월 휴무</p>
+      </div>
+      <p class="footer-note">가상 브랜드 컨셉 프로젝트 · 사진은 AI로 생성</p>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
