@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>체험 수업 예약 | FORM 08</title>
+  <meta name="description" content="FORM 08 체험 수업 예약. 50분 동안 자세 평가와 기구 수업을 해요.">
+  <meta name="theme-color" content="#EEEEEA">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="체험 수업 예약 | FORM 08">
+  <meta property="og:description" content="FORM 08 체험 수업 예약. 50분 동안 자세 평가와 기구 수업을 해요.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400&family=IBM+Plex+Sans+KR:wght@300;400;500&family=Italiana&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html" aria-label="FORM 08 홈">FORM 08</a>
+      <nav class="nav" aria-label="주요 메뉴"><a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="account.html" class="nav-account" data-account-link>로그인</a></nav>
+      <a class="btn btn-solid btn-sm header-cta" href="trial.html">체험 예약</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="menu-label">메뉴</span><span class="menu-icon" aria-hidden="true"></span></button>
+    </div>
+  </header>
+  <nav class="sheet" id="sheet" aria-label="모바일 메뉴">
+    <a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html" aria-current="page">체험 예약</a><a href="account.html" data-account-link>로그인</a>
+    <p class="sheet-foot">평일 07:00 – 22:00, 토요일 09:00 – 17:00</p>
+  </nav>
+
+  <main id="main">
+    <section class="container page-head">
+      <h1>체험 수업 예약</h1>
+      <p class="lede">원하는 수업과 시간대를 남겨주세요. 하루 안에 문자로 확정 시간을 보내드려요.</p>
+    </section>
+    <section class="container section" style="padding-top:0">
+      <div class="form-grid">
+        <div>
+          <dl class="specs" style="margin-top:0">
+            <div><dt>체험 시간</dt><dd>50분</dd></div>
+            <div><dt>하는 일</dt><dd>자세 평가 20분, 기구 수업 30분</dd></div>
+            <div><dt>준비물</dt><dd>편한 운동복, 미끄럼 방지 양말</dd></div>
+          </dl>
+          <figure class="photo r-45 reveal trial-photo" data-photo="04"><img src="images/04-sm.webp" srcset="images/04-sm.webp 800w, images/04.webp 1600w" sizes="(min-width: 900px) 30vw, 100vw" width="1600" height="2000" alt="리포머 스프링 클로즈업" loading="lazy" decoding="async"></figure>
+        </div>
+        <div>
+          <form class="form" id="trial-form" novalidate>
+            <fieldset>
+              <legend>수업</legend>
+              <div class="choices"><label class="choice"><input type="radio" name="class" value="1:1 프라이빗"><span>1:1 프라이빗 50,000원</span></label><label class="choice"><input type="radio" name="class" value="2:1 듀엣"><span>2:1 듀엣 35,000원</span></label><label class="choice"><input type="radio" name="class" value="기구 그룹"><span>기구 그룹 25,000원</span></label></div>
+            </fieldset>
+            <div class="field">
+              <label for="t-date">날짜</label>
+              <input id="t-date" name="date" type="date" aria-describedby="t-date-hint" required>
+              <span class="hint" id="t-date-hint">토요일은 9–17시만 열고, 일요일은 쉬어요.</span>
+            </div>
+            <fieldset>
+              <legend>시간대</legend>
+              <div class="choices"><label class="choice"><input type="radio" name="time" value="오전"><span>오전 7–12시</span></label><label class="choice"><input type="radio" name="time" value="오후"><span>오후 12–18시</span></label><label class="choice"><input type="radio" name="time" value="저녁"><span>저녁 18–22시</span></label></div>
+            </fieldset>
+            <div class="two">
+              <div class="field"><label for="t-name">이름</label><input id="t-name" name="name" autocomplete="name" data-label="이름" required></div>
+              <div class="field"><label for="t-phone">연락처</label><input id="t-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" data-label="연락처" required></div>
+            </div>
+            <div class="field">
+              <label for="t-note">몸 상태 (선택)</label>
+              <textarea id="t-note" name="note" placeholder="예: 오래 앉아 있으면 허리가 아파요"></textarea>
+              <span class="hint">강사가 체험 전에 미리 읽어요.</span>
+            </div>
+            <label class="check"><input type="checkbox" id="t-agree"><span>예약 확인 연락을 위해 이름과 연락처를 쓰는 데 동의해요.</span></label>
+            <p class="form-msg" id="form-msg" role="alert"></p>
+            <div><button class="btn btn-solid" type="submit">체험 예약 요청하기</button></div>
+          </form>
+          <div class="done" id="done" hidden>
+            <h2 tabindex="-1">예약 요청을 받았어요</h2>
+            <p data-summary></p>
+            <p>컨셉 사이트라 실제로 전송되지는 않아요.</p>
+            <div class="hero-actions"><a class="link" href="index.html">홈으로 돌아가기</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="logo" href="index.html">FORM 08</a>
+          <p style="margin-top:16px">서울 성동구 성수이로 08, 3층 (가상 주소)<br>평일 07:00 – 22:00, 토요일 09:00 – 17:00, 일요일 휴무</p>
+        </div>
+        <nav aria-label="하단 메뉴"><a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a></nav>
+        <div>
+          <p>전화 02-000-0808 (예시)</p>
+          <p>인스타그램 @form08.studio (예시)</p>
+        </div>
+      </div>
+      <p class="concept-note">가상 브랜드 컨셉 프로젝트입니다. 가격, 시간표, 강사 정보는 예시이고 사진은 AI로 생성했어요.</p>
+    </div>
+  </footer>
+  <script src="assets/main.js" defer></script>
+</body>
+</html>

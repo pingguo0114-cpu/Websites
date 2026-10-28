@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>이용권 | FORM 08</title>
+  <meta name="description" content="1:1, 2:1, 그룹 이용권 가격과 이용 안내.">
+  <meta name="theme-color" content="#EEEEEA">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="이용권 | FORM 08">
+  <meta property="og:description" content="1:1, 2:1, 그룹 이용권 가격과 이용 안내.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400&family=IBM+Plex+Sans+KR:wght@300;400;500&family=Italiana&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html" aria-label="FORM 08 홈">FORM 08</a>
+      <nav class="nav" aria-label="주요 메뉴"><a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html" aria-current="page">이용권</a><a href="visit.html">오시는 길</a><a href="account.html" class="nav-account" data-account-link>로그인</a></nav>
+      <a class="btn btn-solid btn-sm header-cta" href="trial.html">체험 예약</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="menu-label">메뉴</span><span class="menu-icon" aria-hidden="true"></span></button>
+    </div>
+  </header>
+  <nav class="sheet" id="sheet" aria-label="모바일 메뉴">
+    <a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html" aria-current="page">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a><a href="account.html" data-account-link>로그인</a>
+    <p class="sheet-foot">평일 07:00 – 22:00, 토요일 09:00 – 17:00</p>
+  </nav>
+
+  <main id="main">
+    <section class="container page-head">
+      <h1>이용권</h1>
+      <p class="lede">처음이라면 체험 1회로 시작하세요. 체험 후 일주일 안에 등록하면 체험비만큼 빼드려요.</p>
+    </section>
+    <section class="container section" style="padding-top:0">
+      <div class="seg" role="group" aria-label="수업 종류 선택">
+        <button type="button" data-plan="solo" aria-pressed="true">1:1</button>
+        <button type="button" data-plan="duet" aria-pressed="false">2:1</button>
+        <button type="button" data-plan="group" aria-pressed="false">그룹</button>
+      </div>
+      <table class="price-table">
+        <caption class="sr-only" id="price-caption">1:1 프라이빗 이용권 가격 (예시)</caption>
+        <thead><tr><th scope="col">횟수</th><th scope="col">가격</th><th scope="col">회당</th></tr></thead>
+        <tbody id="price-body" aria-live="polite"></tbody>
+      </table>
+      <ul class="fineprint">
+        <li>유효기간은 10회 3개월, 20회 5개월, 30회 7개월이에요.</li>
+        <li>여행이나 부상 때는 한 번에 최대 4주까지 멈출 수 있어요.</li>
+        <li>예약 취소는 수업 12시간 전까지 해주세요. 이후 취소는 1회 차감돼요.</li>
+        <li>모든 가격은 컨셉 사이트용 예시예요.</li>
+      </ul>
+      <div class="hero-actions"><a class="btn btn-solid" href="trial.html">체험 수업 예약하기</a></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="logo" href="index.html">FORM 08</a>
+          <p style="margin-top:16px">서울 성동구 성수이로 08, 3층 (가상 주소)<br>평일 07:00 – 22:00, 토요일 09:00 – 17:00, 일요일 휴무</p>
+        </div>
+        <nav aria-label="하단 메뉴"><a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html" aria-current="page">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a></nav>
+        <div>
+          <p>전화 02-000-0808 (예시)</p>
+          <p>인스타그램 @form08.studio (예시)</p>
+        </div>
+      </div>
+      <p class="concept-note">가상 브랜드 컨셉 프로젝트입니다. 가격, 시간표, 강사 정보는 예시이고 사진은 AI로 생성했어요.</p>
+    </div>
+  </footer>
+  <div class="book-bar" aria-label="체험 예약 바로가기">
+    <p>첫 체험 50분<br>25,000원부터 (예시)</p>
+    <a class="btn btn-solid" href="trial.html">체험 수업 예약</a>
+  </div>
+  <script src="assets/main.js" defer></script>
+</body>
+</html>
