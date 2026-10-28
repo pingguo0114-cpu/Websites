@@ -1,0 +1,68 @@
+/* Design tokens — values and roles are documented in DESIGN.md */
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+:root {
+  /* Color */
+  --color-bg: #F5EEE3;
+  --color-surface: #FFFBF5;
+  --color-surface-alt: #EBE1D2;
+  --color-text: #3B2A1E;
+  --color-text-muted: #6E6358;
+  --color-border: #B8B2A7;
+  --color-primary: #8A5A33;
+  --color-primary-hover: #6E4626;
+  --color-on-primary: #FFFBF5;
+  --color-accent: #9BAF5A;
+  --color-on-accent: #3B2A1E;
+  --color-success: #5F7230;
+  --color-error: #A63D2F;
+
+  /* Typography */
+  --font-display: "Gowun Batang", serif;
+  --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  --font-hand: "Nanum Pen Script", cursive;
+
+  --text-display: 2rem;      /* 32px mobile, 40px desktop */
+  --text-h2: 1.75rem;        /* 28px */
+  --text-h3: 1.25rem;        /* 20px */
+  --text-body: 1.0625rem;    /* 17px */
+  --text-small: 0.875rem;    /* 14px */
+  --text-price: 1.625rem;    /* 26px */
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.4;
+  --leading-body: 1.7;
+  --measure: 34em;
+
+  /* Spacing (8px scale) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 72px;
+  --space-8: 112px;
+
+  --gutter: 20px;
+  --section-gap: var(--space-7);
+  --content-max: 1120px;
+
+  /* Shape and depth */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(59, 42, 30, 0.08), 0 4px 12px rgba(59, 42, 30, 0.06);
+
+  /* Controls */
+  --control-height: 48px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-display: 2.5rem;  /* 40px */
+    --gutter: 32px;
+    --section-gap: var(--space-8);
+  }
+}
