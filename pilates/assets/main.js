@@ -105,31 +105,51 @@
   });
 
   /* ---------- Timetable (example data) ---------- */
+  // One list feeds both the week grid (wide screens) and the day tabs (phones).
+  var SLOTS = [
+    ['월', '07:00', '1:1 프라이빗', '서윤', 1], ['화', '07:00', '기구 그룹', '도현', 3], ['수', '07:00', '1:1 프라이빗', '서윤', 0], ['목', '07:00', '기구 그룹', '하린', 2], ['금', '07:00', '1:1 프라이빗', '도현', 1],
+    ['월', '10:00', '기구 그룹', '하린', 2], ['수', '10:00', '2:1 듀엣', '도현', 2], ['금', '10:00', '기구 그룹', '서윤', 1], ['토', '10:00', '기구 그룹', '하린', 1],
+    ['화', '12:00', '1:1 프라이빗', '하린', 1], ['목', '12:00', '1:1 프라이빗', '서윤', 1], ['토', '12:00', '2:1 듀엣', '도현', 2],
+    ['토', '14:00', '1:1 프라이빗', '서윤', 0],
+    ['월', '19:00', '2:1 듀엣', '서윤', 1], ['화', '19:00', '기구 그룹', '하린', 1], ['수', '19:00', '기구 그룹', '서윤', 4], ['목', '19:00', '2:1 듀엣', '하린', 1], ['금', '19:00', '기구 그룹', '서윤', 3],
+    ['월', '20:30', '기구 그룹', '도현', 0], ['화', '20:30', '1:1 프라이빗', '도현', 1], ['수', '20:30', '1:1 프라이빗', '도현', 0], ['목', '20:30', '기구 그룹', '도현', 2]
+  ].map(function (r) { return { day: r[0], time: r[1], cls: r[2], who: r[3], left: r[4] }; });
+  var DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+  var OPEN_DAYS = ['월', '화', '수', '목', '금', '토'];
+  var todayName = DAYS[new Date().getDay()];
+  function leftText(n) { return n === 0 ? '마감' : n + '자리 남음'; }
+  function leftClass(n) { return 'left' + (n === 0 ? ' full' : n === 1 ? ' few' : ''); }
+
+  var grid = document.getElementById('week-grid');
+  if (grid) {
+    var times = SLOTS.map(function (x) { return x.time; }).filter(function (t, i, a) { return a.indexOf(t) === i; }).sort();
+    var head = '<thead><tr><th scope="col"><span class="sr-only">시간</span></th>' + OPEN_DAYS.map(function (d) {
+      return '<th scope="col"' + (d === todayName ? ' class="is-today"' : '') + '>' + d + (d === todayName ? '<span class="today-tag">오늘</span>' : '') + '</th>';
+    }).join('') + '</tr></thead>';
+    var body = '<tbody>' + times.map(function (t) {
+      return '<tr><th scope="row">' + t + '</th>' + OPEN_DAYS.map(function (d) {
+        var x = SLOTS.filter(function (s) { return s.day === d && s.time === t; })[0];
+        var cls = d === todayName ? ' class="is-today"' : '';
+        if (!x) return '<td' + cls + '><span class="sr-only">수업 없음</span></td>';
+        return '<td' + cls + '><div class="cell"><span class="cell-cls">' + x.cls + '</span><span class="cell-who">' + x.who + ' 강사</span><span class="' + leftClass(x.left) + '">' + leftText(x.left) + '</span></div></td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody>';
+    grid.insertAdjacentHTML('beforeend', head + body);
+  }
+
   var tt = document.getElementById('timetable');
   if (tt) {
-    var week = {
-      월: [['07:00', '1:1 프라이빗', '서윤', 1], ['10:00', '기구 그룹', '하린', 2], ['19:30', '2:1 듀엣', '서윤', 1], ['21:00', '기구 그룹', '도현', 0]],
-      화: [['07:00', '기구 그룹', '도현', 3], ['12:10', '1:1 프라이빗', '하린', 1], ['20:00', '기구 그룹', '하린', 1]],
-      수: [['07:00', '1:1 프라이빗', '서윤', 1], ['10:00', '2:1 듀엣', '도현', 2], ['19:30', '기구 그룹', '서윤', 4], ['21:00', '1:1 프라이빗', '도현', 0]],
-      목: [['07:00', '기구 그룹', '하린', 2], ['12:10', '1:1 프라이빗', '서윤', 1], ['20:00', '2:1 듀엣', '하린', 1]],
-      금: [['07:00', '1:1 프라이빗', '도현', 1], ['19:00', '기구 그룹', '서윤', 3]],
-      토: [['09:00', '기구 그룹', '하린', 1], ['10:30', '2:1 듀엣', '도현', 2], ['12:00', '1:1 프라이빗', '서윤', 0]],
-      일: []
-    };
-    var days = ['일', '월', '화', '수', '목', '금', '토'];
     var list = document.querySelector('#days');
     function render(day) {
-      var rows = week[day] || [];
+      var rows = SLOTS.filter(function (s) { return s.day === day; }).sort(function (a, b) { return a.time < b.time ? -1 : 1; });
       if (!rows.length) { tt.innerHTML = '<p class="empty">일요일은 쉬어요. 월요일 아침 7시에 첫 수업이 있어요.</p>'; return; }
       tt.innerHTML = rows.map(function (r) {
-        var left = r[3] === 0 ? '<span class="left full">마감</span>' : '<span class="left' + (r[3] === 1 ? ' few' : '') + '">' + r[3] + '자리 남음</span>';
-        return '<div class="slot"><time>' + r[0] + '</time><span>' + r[1] + ' <span class="who">· ' + r[2] + '</span></span>' + left + '</div>';
+        return '<div class="slot"><time>' + r.time + '</time><span>' + r.cls + '<span class="who">' + r.who + ' 강사</span></span><span class="' + leftClass(r.left) + '">' + leftText(r.left) + '</span></div>';
       }).join('');
       tt.classList.remove('switched'); void tt.offsetWidth; tt.classList.add('switched');
     }
     list.addEventListener('tabchange', function (e) { render(e.detail.dataset.day); });
-    var today = days[new Date().getDay()];
-    var todayTab = list.querySelector('[data-day="' + today + '"]');
+    var todayTab = list.querySelector('[data-day="' + todayName + '"]');
     if (todayTab) { todayTab.querySelector('.today-mark').hidden = false; todayTab.click(); }
   }
 

@@ -98,11 +98,19 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="schedule">
       <div class="container">
         <div class="section-title"><h2>이번 주 시간표</h2><span class="muted" style="font-size:.8125rem">예시 시간표예요</span></div>
-        <div class="tablist" role="tablist" aria-label="요일" id="days" data-start="0"><button class="tab" role="tab" data-day="월" aria-selected="false">월<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="화" aria-selected="false">화<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="수" aria-selected="false">수<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="목" aria-selected="false">목<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="금" aria-selected="false">금<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="토" aria-selected="false">토<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="일" aria-selected="false">일<span class="today-mark" hidden> (오늘)</span></button></div>
-        <div class="timetable panel" id="timetable" role="tabpanel" aria-live="polite"></div>
+        <p class="schedule-note">모든 수업은 50분이에요. 일요일은 쉬어요.</p>
+        <div class="week-wrap">
+          <table class="week-grid" id="week-grid">
+            <caption class="sr-only">요일별 수업과 강사, 남은 자리</caption>
+          </table>
+        </div>
+        <div class="day-view">
+          <div class="tablist" role="tablist" aria-label="요일" id="days" data-start="0"><button class="tab" role="tab" data-day="월" aria-selected="false">월<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="화" aria-selected="false">화<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="수" aria-selected="false">수<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="목" aria-selected="false">목<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="금" aria-selected="false">금<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="토" aria-selected="false">토<span class="today-mark" hidden> (오늘)</span></button><button class="tab" role="tab" data-day="일" aria-selected="false">일<span class="today-mark" hidden> (오늘)</span></button></div>
+          <div class="timetable panel" id="timetable" role="tabpanel" aria-live="polite"></div>
+        </div>
       </div>
     </section>
   </main>

@@ -282,11 +282,34 @@ body.has-bar { padding-bottom: 72px; }
 .timetable { display: grid; }
 .slot { display: grid; grid-template-columns: 4.5em 1fr auto; gap: 4px 16px; align-items: baseline; padding-block: 18px; border-bottom: 1px solid var(--line); font-size: var(--t-small); }
 .slot time { font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 400; }
-.slot .who { color: var(--stone); }
+.slot .who { display: block; color: var(--stone); font-size: var(--t-tiny); }
 .slot .left { font-size: var(--t-tiny); color: var(--stone); white-space: nowrap; }
 .slot .left.few { color: var(--error); }
 .slot .left.full { text-decoration: line-through; }
 .empty { padding-block: 32px; color: var(--stone); }
+.schedule-note { color: var(--stone); font-size: var(--t-small); margin: -24px 0 32px; }
+
+/* Week grid: wide screens only. Phones keep the day tabs. */
+.week-wrap { display: none; }
+@media (min-width: 900px) {
+  .week-wrap { display: block; }
+  .day-view { display: none; }
+}
+.week-grid { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: var(--t-small); }
+.week-grid th, .week-grid td { border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.week-grid thead th { font-weight: 400; padding: 0 12px 14px; color: var(--stone); border-bottom-color: var(--ink); }
+.week-grid thead th:first-child { width: 5.5em; padding-left: 0; }
+.week-grid tbody th { font-weight: 400; padding: 18px 0; font-variant-numeric: tabular-nums; font-size: 1rem; }
+.week-grid td { padding: 10px 6px; border-left: 1px solid var(--line); height: 1px; }
+.week-grid .is-today { background: var(--paper); }
+.week-grid thead .is-today { color: var(--ink); }
+.today-tag { margin-left: 8px; font-size: var(--t-tiny); color: var(--oak); }
+.cell { display: flex; flex-direction: column; gap: 2px; padding: 8px 8px 10px; height: 100%; }
+.cell-cls { color: var(--ink); line-height: 1.5; }
+.cell-who { color: var(--stone); font-size: var(--t-tiny); }
+.cell .left { margin-top: 6px; font-size: var(--t-tiny); color: var(--stone); }
+.cell .left.few { color: var(--error); }
+.cell .left.full { text-decoration: line-through; }
 
 /* ---------- Instructors ---------- */
 .people { display: grid; gap: 64px 32px; }
