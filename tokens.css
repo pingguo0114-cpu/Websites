@@ -1,6 +1,5 @@
-/* Design tokens — values and roles are documented in DESIGN.md */
-@import url("https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&display=swap");
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+/* Design tokens — values and roles are documented in DESIGN.md.
+   Fonts (Gowun Batang, Nanum Pen Script, Pretendard) are loaded in index.html. */
 
 :root {
   /* Color */
