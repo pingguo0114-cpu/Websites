@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>로그인 | FORM 08</title>
+  <meta name="description" content="FORM 08 회원 로그인과 가입. 회원은 시간표에서 바로 수업을 예약할 수 있어요.">
+  <meta name="theme-color" content="#EEEEEA">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="로그인 | FORM 08">
+  <meta property="og:description" content="FORM 08 회원 로그인과 가입. 회원은 시간표에서 바로 수업을 예약할 수 있어요.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400&family=IBM+Plex+Sans+KR:wght@300;400;500&family=Italiana&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html" aria-label="FORM 08 홈">FORM 08</a>
+      <nav class="nav" aria-label="주요 메뉴"><a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="account.html" class="nav-account" data-account-link aria-current="page">로그인</a></nav>
+      <a class="btn btn-solid btn-sm header-cta" href="trial.html">체험 예약</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="menu-label">메뉴</span><span class="menu-icon" aria-hidden="true"></span></button>
+    </div>
+  </header>
+  <nav class="sheet" id="sheet" aria-label="모바일 메뉴">
+    <a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a><a href="account.html" data-account-link aria-current="page">로그인</a>
+    <p class="sheet-foot">평일 07:00 – 22:00, 토요일 09:00 – 17:00</p>
+  </nav>
+
+  <main id="main">
+    <section class="container page-head">
+      <h1 id="account-title">로그인</h1>
+      <p class="lede" id="account-lede">회원이 되면 시간표에서 바로 수업을 예약하고, 내 예약을 한곳에서 볼 수 있어요.</p>
+    </section>
+    <section class="container section" style="padding-top:0">
+      <div class="form-grid">
+        <div>
+          <div class="demo-note">
+            <h2>데모 화면이에요</h2>
+            <p>가입 정보와 예약은 지금 쓰는 브라우저에만 저장되고, 어디로도 보내지 않아요. 실제로 쓰는 비밀번호는 넣지 마세요.</p>
+          </div>
+        </div>
+        <div>
+          <div id="auth">
+            <div class="tablist" role="tablist" aria-label="로그인 또는 회원가입" id="auth-tabs">
+              <button class="tab" role="tab" id="t-login" aria-controls="p-login" aria-selected="true">로그인</button>
+              <button class="tab" role="tab" id="t-signup" aria-controls="p-signup" aria-selected="false">회원가입</button>
+            </div>
+            <div class="panel" id="p-login" role="tabpanel" aria-labelledby="t-login">
+              <form class="form" id="login-form" novalidate>
+                <div class="field"><label for="l-phone">휴대폰 번호</label><input id="l-phone" name="phone" type="tel" inputmode="tel" autocomplete="username" placeholder="010-0000-0000"></div>
+                <div class="field"><label for="l-pw">비밀번호</label><input id="l-pw" name="password" type="password" autocomplete="current-password"></div>
+                <p class="form-msg" id="login-msg" role="alert"></p>
+                <div><button class="btn btn-solid" type="submit">로그인</button></div>
+              </form>
+            </div>
+            <div class="panel" id="p-signup" role="tabpanel" aria-labelledby="t-signup" hidden>
+              <form class="form" id="signup-form" novalidate>
+                <div class="field"><label for="s-name">이름</label><input id="s-name" name="name" autocomplete="name"></div>
+                <div class="field"><label for="s-phone">휴대폰 번호</label><input id="s-phone" name="phone" type="tel" inputmode="tel" autocomplete="username" placeholder="010-0000-0000"></div>
+                <div class="field"><label for="s-pw">비밀번호</label><input id="s-pw" name="password" type="password" autocomplete="new-password" aria-describedby="s-pw-hint"><span class="hint" id="s-pw-hint">6자 이상. 데모라서 실제 비밀번호는 쓰지 마세요.</span></div>
+                <label class="check"><input type="checkbox" id="s-agree"><span>예약 안내를 위해 이름과 휴대폰 번호를 쓰는 데 동의해요.</span></label>
+                <p class="form-msg" id="signup-msg" role="alert"></p>
+                <div><button class="btn btn-solid" type="submit">가입하고 시작하기</button></div>
+              </form>
+            </div>
+          </div>
+          <div id="me" hidden>
+            <h2 class="me-hello" tabindex="-1"><span data-me-name></span>님, 반가워요</h2>
+            <p class="muted me-phone">휴대폰 <span data-me-phone></span></p>
+            <h3 class="me-sub">예약한 수업</h3>
+            <div id="my-bookings"></div>
+            <div class="hero-actions">
+              <a class="btn btn-solid" href="classes.html#schedule">시간표에서 예약하기</a>
+              <button class="link link-btn" type="button" id="logout">로그아웃</button>
+            </div>
+            <p class="reset-note"><button class="link link-btn" type="button" id="reset-demo">이 브라우저의 데모 정보 모두 지우기</button></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="logo" href="index.html">FORM 08</a>
+          <p style="margin-top:16px">서울 성동구 성수이로 08, 3층 (가상 주소)<br>평일 07:00 – 22:00, 토요일 09:00 – 17:00, 일요일 휴무</p>
+        </div>
+        <nav aria-label="하단 메뉴"><a href="index.html">홈</a><a href="classes.html">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a></nav>
+        <div>
+          <p>전화 02-000-0808 (예시)</p>
+          <p>인스타그램 @form08.studio (예시)</p>
+        </div>
+      </div>
+      <p class="concept-note">가상 브랜드 컨셉 프로젝트입니다. 가격, 시간표, 강사 정보는 예시이고 사진은 AI로 생성했어요.</p>
+    </div>
+  </footer>
+  <script src="assets/main.js" defer></script>
+</body>
+</html>

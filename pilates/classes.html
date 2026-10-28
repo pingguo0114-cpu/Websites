@@ -20,13 +20,13 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html" aria-label="FORM 08 홈">FORM 08</a>
-      <nav class="nav" aria-label="주요 메뉴"><a href="index.html">홈</a><a href="classes.html" aria-current="page">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a></nav>
+      <nav class="nav" aria-label="주요 메뉴"><a href="index.html">홈</a><a href="classes.html" aria-current="page">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="account.html" class="nav-account" data-account-link>로그인</a></nav>
       <a class="btn btn-solid btn-sm header-cta" href="trial.html">체험 예약</a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="menu-label">메뉴</span><span class="menu-icon" aria-hidden="true"></span></button>
     </div>
   </header>
   <nav class="sheet" id="sheet" aria-label="모바일 메뉴">
-    <a href="index.html">홈</a><a href="classes.html" aria-current="page">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a>
+    <a href="index.html">홈</a><a href="classes.html" aria-current="page">수업</a><a href="instructors.html">강사</a><a href="pricing.html">이용권</a><a href="visit.html">오시는 길</a><a href="trial.html">체험 예약</a><a href="account.html" data-account-link>로그인</a>
     <p class="sheet-foot">평일 07:00 – 22:00, 토요일 09:00 – 17:00</p>
   </nav>
 
@@ -100,8 +100,13 @@
 
     <section class="section" id="schedule">
       <div class="container">
-        <div class="section-title"><h2>이번 주 시간표</h2><span class="muted" style="font-size:.8125rem">예시 시간표예요</span></div>
-        <p class="schedule-note">모든 수업은 50분이에요. 일요일은 쉬어요.</p>
+        <div class="section-title"><h2>주간 시간표</h2><span class="muted" style="font-size:.8125rem">예시 시간표예요</span></div>
+        <p class="schedule-note">모든 수업은 50분이에요. 일요일은 쉬어요. 회원은 수업 칸을 눌러 바로 예약할 수 있어요.</p>
+        <div class="week-bar">
+          <div class="seg week-seg" role="group" aria-label="주 선택"><button type="button" data-week="0" aria-pressed="true">이번 주</button><button type="button" data-week="1" aria-pressed="false">다음 주</button></div>
+          <p class="week-range" id="week-range"></p>
+        </div>
+        <p class="booking-status" id="booking-status" role="status"></p>
         <div class="week-wrap">
           <table class="week-grid" id="week-grid">
             <caption class="sr-only">요일별 수업과 강사, 남은 자리</caption>
@@ -113,6 +118,9 @@
         </div>
       </div>
     </section>
+    <dialog class="booking-dialog" id="booking-dialog" aria-labelledby="dlg-title">
+      <div class="dlg-body"></div>
+    </dialog>
   </main>
 
   <footer class="site-footer">

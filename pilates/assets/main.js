@@ -104,8 +104,9 @@
     if (start) select(start, false);
   });
 
-  /* ---------- Timetable (example data) ---------- */
-  // One list feeds both the week grid (wide screens) and the day tabs (phones).
+  /* ---------- Schedule data (example) ---------- */
+  // One list feeds the week grid (wide screens), the day tabs (phones) and "my bookings".
+  // left = seats still open before this visitor books (example numbers, same every week).
   var SLOTS = [
     ['월', '07:00', '1:1 프라이빗', '서윤', 1], ['화', '07:00', '기구 그룹', '도현', 3], ['수', '07:00', '1:1 프라이빗', '서윤', 0], ['목', '07:00', '기구 그룹', '하린', 2], ['금', '07:00', '1:1 프라이빗', '도현', 1],
     ['월', '10:00', '기구 그룹', '하린', 2], ['수', '10:00', '2:1 듀엣', '도현', 2], ['금', '10:00', '기구 그룹', '서윤', 1], ['토', '10:00', '기구 그룹', '하린', 1],
@@ -116,41 +117,290 @@
   ].map(function (r) { return { day: r[0], time: r[1], cls: r[2], who: r[3], left: r[4] }; });
   var DAYS = ['일', '월', '화', '수', '목', '금', '토'];
   var OPEN_DAYS = ['월', '화', '수', '목', '금', '토'];
+  var CANCEL_HOURS = 12;
   var todayName = DAYS[new Date().getDay()];
-  function leftText(n) { return n === 0 ? '마감' : n + '자리 남음'; }
-  function leftClass(n) { return 'left' + (n === 0 ? ' full' : n === 1 ? ' few' : ''); }
 
-  var grid = document.getElementById('week-grid');
-  if (grid) {
-    var times = SLOTS.map(function (x) { return x.time; }).filter(function (t, i, a) { return a.indexOf(t) === i; }).sort();
-    var head = '<thead><tr><th scope="col"><span class="sr-only">시간</span></th>' + OPEN_DAYS.map(function (d) {
-      return '<th scope="col"' + (d === todayName ? ' class="is-today"' : '') + '>' + d + (d === todayName ? '<span class="today-tag">오늘</span>' : '') + '</th>';
-    }).join('') + '</tr></thead>';
-    var body = '<tbody>' + times.map(function (t) {
-      return '<tr><th scope="row">' + t + '</th>' + OPEN_DAYS.map(function (d) {
-        var x = SLOTS.filter(function (s) { return s.day === d && s.time === t; })[0];
-        var cls = d === todayName ? ' class="is-today"' : '';
-        if (!x) return '<td' + cls + '><span class="sr-only">수업 없음</span></td>';
-        return '<td' + cls + '><div class="cell"><span class="cell-cls">' + x.cls + '</span><span class="cell-who">' + x.who + ' 강사</span><span class="' + leftClass(x.left) + '">' + leftText(x.left) + '</span></div></td>';
-      }).join('') + '</tr>';
-    }).join('') + '</tbody>';
-    grid.insertAdjacentHTML('beforeend', head + body);
+  /* ---------- Demo account (saved in this browser only) ---------- */
+  // Nothing leaves the browser. Passwords are stored as a hash, never as typed.
+  var STORE_KEY = 'form08-demo';
+  function loadStore() {
+    var d = null;
+    try { d = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) {}
+    d = d && typeof d === 'object' ? d : {};
+    d.users = Array.isArray(d.users) ? d.users : [];
+    d.bookings = Array.isArray(d.bookings) ? d.bookings : [];
+    return d;
+  }
+  var store = loadStore();
+  function saveStore() { try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); return true; } catch (e) { return false; } }
+  function me() { return store.users.filter(function (u) { return u.phone === store.session; })[0] || null; }
+  function digits(v) { return String(v || '').replace(/\D/g, ''); }
+  function prettyPhone(d) { return d.length === 11 ? d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7) : d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6); }
+  function hashPw(phone, pw) {
+    var text = 'form08|' + phone + '|' + pw;
+    if (window.crypto && crypto.subtle && window.TextEncoder) {
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (buf) {
+        return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+      });
+    }
+    var h = 5381; for (var i = 0; i < text.length; i++) h = (h * 33 + text.charCodeAt(i)) >>> 0;
+    return Promise.resolve('d' + h.toString(16));
+  }
+  function refreshAccountLinks() {
+    var u = me();
+    document.querySelectorAll('[data-account-link]').forEach(function (a) { a.textContent = u ? '내 예약' : '로그인'; });
+  }
+  refreshAccountLinks();
+
+  // Account page
+  var authBox = document.getElementById('auth');
+  if (authBox) {
+    var meBox = document.getElementById('me');
+    var next = new URLSearchParams(location.search).get('next');
+    if (!/^[a-z]+\.html(#[a-z-]+)?$/.test(next || '')) next = null; // only our own pages
+    function fail(el, text, focusEl) { el.textContent = text; el.className = 'form-msg err'; if (focusEl) focusEl.focus(); }
+    function showMe(focus) {
+      var u = me();
+      authBox.hidden = !!u; meBox.hidden = !u;
+      document.getElementById('account-title').textContent = u ? '내 예약' : '로그인';
+      document.title = (u ? '내 예약' : '로그인') + ' | FORM 08';
+      document.getElementById('account-lede').hidden = !!u;
+      refreshAccountLinks();
+      if (!u) return;
+      meBox.querySelector('[data-me-name]').textContent = u.name;
+      meBox.querySelector('[data-me-phone]').textContent = prettyPhone(u.phone);
+      renderMyBookings();
+      if (focus) meBox.querySelector('.me-hello').focus();
+    }
+    function backToLogin() {
+      showMe(false);
+      var t = document.getElementById('t-login'); t.click(); t.focus();
+    }
+    function signedIn() {
+      if (next) { location.href = next; return; }
+      showMe(true);
+    }
+    document.getElementById('login-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = document.getElementById('login-msg');
+      var phoneEl = document.getElementById('l-phone'), pwEl = document.getElementById('l-pw');
+      var phone = digits(phoneEl.value);
+      if (!phone) return fail(msg, '휴대폰 번호를 입력해 주세요.', phoneEl);
+      if (!pwEl.value) return fail(msg, '비밀번호를 입력해 주세요.', pwEl);
+      var user = store.users.filter(function (u) { return u.phone === phone; })[0];
+      hashPw(phone, pwEl.value).then(function (h) {
+        if (!user || user.pw !== h) return fail(msg, '휴대폰 번호나 비밀번호가 맞지 않아요.', pwEl);
+        store.session = phone; saveStore(); signedIn();
+      });
+    });
+    document.getElementById('signup-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = document.getElementById('signup-msg');
+      var nameEl = document.getElementById('s-name'), phoneEl = document.getElementById('s-phone'), pwEl = document.getElementById('s-pw'), agree = document.getElementById('s-agree');
+      var name = nameEl.value.trim(), phone = digits(phoneEl.value);
+      if (!name) return fail(msg, '이름을 입력해 주세요.', nameEl);
+      if (!/^01\d{8,9}$/.test(phone)) return fail(msg, '휴대폰 번호를 010-0000-0000처럼 입력해 주세요.', phoneEl);
+      if (pwEl.value.length < 6) return fail(msg, '비밀번호는 6자 이상으로 정해 주세요.', pwEl);
+      if (!agree.checked) return fail(msg, '이름과 휴대폰 번호 사용에 동의해 주세요.', agree);
+      if (store.users.some(function (u) { return u.phone === phone; })) return fail(msg, '이미 가입한 번호예요. 로그인 탭에서 들어와 주세요.', phoneEl);
+      hashPw(phone, pwEl.value).then(function (h) {
+        store.users.push({ name: name, phone: phone, pw: h });
+        store.session = phone;
+        if (!saveStore()) return fail(msg, '이 브라우저에서는 저장할 수 없어요. 개인정보 보호 모드라면 일반 창에서 열어 주세요.');
+        signedIn();
+      });
+    });
+    document.getElementById('logout').addEventListener('click', function () {
+      delete store.session; saveStore(); backToLogin();
+    });
+    document.getElementById('reset-demo').addEventListener('click', function () {
+      if (!window.confirm('이 브라우저에 저장된 데모 가입 정보와 예약을 모두 지울까요?')) return;
+      try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+      store = loadStore(); backToLogin();
+    });
+    if (location.hash === '#signup') document.getElementById('t-signup').click();
+    showMe(false);
+  }
+  function renderMyBookings() {
+    var box = document.getElementById('my-bookings');
+    if (!box) return;
+    var mine = store.bookings.filter(function (b) { return b.phone === store.session; });
+    var now = new Date();
+    var upcoming = mine.filter(function (b) { return startOf(b.date, b.time) > now; });
+    if (!upcoming.length) { box.innerHTML = '<p class="empty">다가오는 예약이 없어요. 시간표에서 듣고 싶은 수업을 골라 보세요.</p>'; return; }
+    upcoming.sort(function (a, b) { return startOf(a.date, a.time) - startOf(b.date, b.time); });
+    box.innerHTML = '<ul class="my-list">' + upcoming.map(function (b, i) {
+      var ok = canCancel(b);
+      return '<li><div><p class="my-when">' + longDate(b.date, b.time) + '</p><p class="my-what">' + b.cls + '<span>' + b.who + ' 강사</span></p></div>' +
+        (ok ? '<button type="button" class="link link-btn" data-cancel="' + i + '">취소</button>' : '<span class="muted my-lock">취소 기한이 지났어요</span>') + '</li>';
+    }).join('') + '</ul>';
+    box.querySelectorAll('[data-cancel]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var b = upcoming[Number(btn.dataset.cancel)];
+        if (!window.confirm(longDate(b.date, b.time) + ' ' + b.cls + ' 예약을 취소할까요?')) return;
+        cancelBooking(b); renderMyBookings();
+        var h = document.querySelector('.me-sub'); if (h) { h.tabIndex = -1; h.focus(); }
+      });
+    });
   }
 
-  var tt = document.getElementById('timetable');
-  if (tt) {
-    var list = document.querySelector('#days');
-    function render(day) {
-      var rows = SLOTS.filter(function (s) { return s.day === day; }).sort(function (a, b) { return a.time < b.time ? -1 : 1; });
-      if (!rows.length) { tt.innerHTML = '<p class="empty">일요일은 쉬어요. 월요일 아침 7시에 첫 수업이 있어요.</p>'; return; }
-      tt.innerHTML = rows.map(function (r) {
-        return '<div class="slot"><time>' + r.time + '</time><span>' + r.cls + '<span class="who">' + r.who + ' 강사</span></span><span class="' + leftClass(r.left) + '">' + leftText(r.left) + '</span></div>';
-      }).join('');
-      tt.classList.remove('switched'); void tt.offsetWidth; tt.classList.add('switched');
+  /* ---------- Timetable and booking (example data) ---------- */
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function isoDate(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function weekMonday(offset) {
+    // Sunday is closed, so on a Sunday "this week" means the week starting tomorrow.
+    var d = new Date(); d.setHours(0, 0, 0, 0);
+    var back = d.getDay() === 0 ? -1 : d.getDay() - 1;
+    d.setDate(d.getDate() - back + offset * 7);
+    return d;
+  }
+  function dateOf(monday, day) { var d = new Date(monday); d.setDate(d.getDate() + OPEN_DAYS.indexOf(day)); return d; }
+  function startOf(date, time) { var d = new Date(date + 'T00:00'); d.setHours(Number(time.slice(0, 2)), Number(time.slice(3, 5))); return d; }
+  function longDate(date, time) { var d = new Date(date + 'T00:00'); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 (' + DAYS[d.getDay()] + ')' + (time ? ' ' + time : ''); }
+  function shortDate(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
+  function myBooking(date, time) {
+    return store.bookings.filter(function (b) { return b.phone === store.session && b.date === date && b.time === time; })[0] || null;
+  }
+  function canCancel(b) { return startOf(b.date, b.time) - new Date() > CANCEL_HOURS * 3600 * 1000; }
+  function cancelBooking(b) {
+    store.bookings = store.bookings.filter(function (x) { return x !== b; });
+    saveStore();
+  }
+  // What a slot looks like for this visitor on a given date.
+  function slotState(slot, date) {
+    var mine = myBooking(date, slot.time);
+    if (startOf(date, slot.time) <= new Date()) return { key: 'past', text: '지난 수업' };
+    if (mine) return { key: 'mine', text: '예약했어요', booking: mine };
+    if (slot.left === 0) return { key: 'full', text: '마감' };
+    return { key: 'open', text: slot.left + '자리 남음', few: slot.left === 1 };
+  }
+
+  var schedule = document.getElementById('schedule');
+  if (schedule) {
+    var weekOffset = 0;
+    var grid = document.getElementById('week-grid');
+    var tt = document.getElementById('timetable');
+    var dayList = document.getElementById('days');
+    var status = document.getElementById('booking-status');
+    var dlg = document.getElementById('booking-dialog');
+    var currentDay = todayName === '일' ? '월' : todayName;
+    var times = SLOTS.map(function (x) { return x.time; }).filter(function (t, i, a) { return a.indexOf(t) === i; }).sort();
+
+    function slotButton(slot, date, st, extraClass) {
+      var label = longDate(date, slot.time) + ' ' + slot.cls + ', ' + slot.who + ' 강사, ' + st.text;
+      var inner = '<span class="cell-cls">' + slot.cls + '</span><span class="cell-who">' + slot.who + ' 강사</span>' +
+        '<span class="left' + (st.few ? ' few' : '') + (st.key === 'full' ? ' full' : '') + '">' + st.text + '</span>';
+      var cls = extraClass + ' is-' + st.key;
+      if (st.key === 'past' || st.key === 'full') return '<div class="' + cls + '">' + inner + '</div>';
+      return '<button type="button" class="' + cls + '" data-date="' + date + '" data-time="' + slot.time + '" aria-label="' + label + '">' + inner + '</button>';
     }
-    list.addEventListener('tabchange', function (e) { render(e.detail.dataset.day); });
-    var todayTab = list.querySelector('[data-day="' + todayName + '"]');
-    if (todayTab) { todayTab.querySelector('.today-mark').hidden = false; todayTab.click(); }
+
+    function renderGrid() {
+      var monday = weekMonday(weekOffset);
+      var head = '<thead><tr><th scope="col"><span class="sr-only">시간</span></th>' + OPEN_DAYS.map(function (d) {
+        var isToday = weekOffset === 0 && d === todayName;
+        return '<th scope="col"' + (isToday ? ' class="is-today"' : '') + '>' + d + ' <span class="th-date">' + shortDate(dateOf(monday, d)) + '</span>' + (isToday ? '<span class="today-tag">오늘</span>' : '') + '</th>';
+      }).join('') + '</tr></thead>';
+      var rows = times.map(function (t) {
+        return '<tr><th scope="row">' + t + '</th>' + OPEN_DAYS.map(function (d) {
+          var slot = SLOTS.filter(function (s) { return s.day === d && s.time === t; })[0];
+          var td = weekOffset === 0 && d === todayName ? '<td class="is-today">' : '<td>';
+          if (!slot) return td + '<span class="sr-only">수업 없음</span></td>';
+          var date = isoDate(dateOf(monday, d));
+          return td + slotButton(slot, date, slotState(slot, date), 'cell') + '</td>';
+        }).join('') + '</tr>';
+      }).join('');
+      grid.querySelectorAll('thead, tbody').forEach(function (el) { el.remove(); });
+      grid.insertAdjacentHTML('beforeend', head + '<tbody>' + rows + '</tbody>');
+    }
+
+    function renderDay(animate) {
+      var monday = weekMonday(weekOffset);
+      var date = isoDate(dateOf(monday, currentDay));
+      var rows = SLOTS.filter(function (s) { return s.day === currentDay; }).sort(function (a, b) { return a.time < b.time ? -1 : 1; });
+      var headline = '<p class="day-date">' + longDate(date) + '</p>';
+      if (currentDay === '일' || !rows.length) { tt.innerHTML = '<p class="empty">일요일은 쉬어요. 월요일 아침 7시에 첫 수업이 있어요.</p>'; return; }
+      tt.innerHTML = headline + rows.map(function (r) {
+        return '<div class="slot"><time>' + r.time + '</time>' + slotButton(r, date, slotState(r, date), 'slot-body') + '</div>';
+      }).join('');
+      if (animate) { tt.classList.remove('switched'); void tt.offsetWidth; tt.classList.add('switched'); }
+    }
+
+    function renderAll() {
+      var monday = weekMonday(weekOffset), sat = dateOf(monday, '토');
+      document.getElementById('week-range').textContent = (monday.getMonth() + 1) + '월 ' + monday.getDate() + '일 – ' + (sat.getMonth() + 1) + '월 ' + sat.getDate() + '일';
+      schedule.querySelectorAll('[data-week]').forEach(function (b) { b.setAttribute('aria-pressed', String(Number(b.dataset.week) === weekOffset)); });
+      renderGrid(); renderDay(false);
+      dayList.querySelectorAll('.today-mark').forEach(function (m) { m.hidden = !(weekOffset === 0 && m.parentNode.dataset.day === todayName); });
+    }
+
+    schedule.querySelector('.week-seg').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-week]'); if (!b) return;
+      weekOffset = Number(b.dataset.week); renderAll();
+    });
+    dayList.addEventListener('tabchange', function (e) { currentDay = e.detail.dataset.day; renderDay(true); });
+
+    // Booking dialog
+    var lastTrigger = null;
+    function openDialog(html) {
+      dlg.querySelector('.dlg-body').innerHTML = html;
+      if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+      var first = dlg.querySelector('[data-autofocus]') || dlg.querySelector('button, a');
+      if (first) first.focus();
+    }
+    function closeDialog() {
+      if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open');
+    }
+    dlg.addEventListener('close', function () { if (lastTrigger && document.contains(lastTrigger)) lastTrigger.focus(); });
+    dlg.addEventListener('click', function (e) {
+      if (e.target === dlg) return closeDialog(); // click on the dim background
+      var act = e.target.closest('[data-act]'); if (!act) return;
+      var date = dlg.dataset.date, time = dlg.dataset.time;
+      var slot = SLOTS.filter(function (s) { return s.day === DAYS[new Date(date + 'T00:00').getDay()] && s.time === time; })[0];
+      if (act.dataset.act === 'close') return closeDialog();
+      if (act.dataset.act === 'book') {
+        store.bookings.push({ phone: store.session, date: date, time: time, cls: slot.cls, who: slot.who, at: Date.now() });
+        saveStore();
+        status.textContent = longDate(date, time) + ' ' + slot.cls + ' 수업을 예약했어요.';
+      }
+      if (act.dataset.act === 'cancel') {
+        cancelBooking(myBooking(date, time));
+        status.textContent = longDate(date, time) + ' ' + slot.cls + ' 예약을 취소했어요.';
+      }
+      renderAll();
+      lastTrigger = Array.prototype.filter.call(schedule.querySelectorAll('[data-date="' + date + '"][data-time="' + time + '"]'), function (el) { return el.offsetParent !== null; })[0] || lastTrigger;
+      closeDialog();
+    });
+
+    schedule.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-date]'); if (!btn) return;
+      lastTrigger = btn;
+      var date = btn.dataset.date, time = btn.dataset.time;
+      var slot = SLOTS.filter(function (s) { return s.day === DAYS[new Date(date + 'T00:00').getDay()] && s.time === time; })[0];
+      var st = slotState(slot, date);
+      dlg.dataset.date = date; dlg.dataset.time = time;
+      var what = '<p class="dlg-when">' + longDate(date, time) + ', 50분</p><h2 id="dlg-title">' + slot.cls + '</h2><p class="dlg-who">' + slot.who + ' 강사</p>';
+      var user = me();
+      if (!user) {
+        var back = encodeURIComponent('classes.html#schedule');
+        openDialog(what + '<p class="dlg-text">예약하려면 로그인이 필요해요. 처음이라면 1분 만에 가입할 수 있어요.</p>' +
+          '<div class="dlg-actions"><a class="btn btn-solid" data-autofocus href="account.html?next=' + back + '">로그인</a><a class="btn btn-line" href="account.html?next=' + back + '#signup">회원가입</a><button type="button" class="link link-btn" data-act="close">닫기</button></div>');
+        return;
+      }
+      if (st.key === 'mine') {
+        var ok = canCancel(st.booking);
+        openDialog(what + '<p class="dlg-text">' + (ok ? '예약한 수업이에요. 취소하면 자리가 다른 분께 돌아가요.' : '수업 ' + CANCEL_HOURS + '시간 전이 지나서 취소할 수 없어요. 스튜디오로 연락해 주세요.') + '</p>' +
+          '<div class="dlg-actions">' + (ok ? '<button type="button" class="btn btn-line" data-act="cancel">예약 취소하기</button>' : '') + '<button type="button" class="link link-btn" data-act="close" data-autofocus>닫기</button></div>');
+        return;
+      }
+      openDialog(what + '<p class="dlg-text">' + user.name + '님 이름으로 예약할까요? 지금 ' + slot.left + '자리 남았어요. 취소는 수업 ' + CANCEL_HOURS + '시간 전까지 할 수 있어요.</p>' +
+        '<div class="dlg-actions"><button type="button" class="btn btn-solid" data-act="book" data-autofocus>예약하기</button><button type="button" class="link link-btn" data-act="close">닫기</button></div>');
+    });
+
+    renderAll();
+    var startTab = dayList.querySelector('[data-day="' + currentDay + '"]');
+    if (startTab) startTab.click();
   }
 
   /* ---------- Instructor details ---------- */
@@ -164,7 +414,7 @@
   });
 
   /* ---------- Pricing switch ---------- */
-  var seg = document.querySelector('.seg');
+  var seg = document.getElementById('price-body') && document.querySelector('.seg');
   if (seg) {
     var plans = {
       solo: { name: '1:1 프라이빗', rows: [['체험 1회', 50000, 1], ['10회', 800000, 10], ['20회', 1500000, 20, true], ['30회', 2100000, 30]] },
