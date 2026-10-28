@@ -182,21 +182,25 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var missing = [];
+      var first = null; // first empty field, in screen order, gets the focus
+      function miss(label, el) { missing.push(label); if (!first) first = el; }
       form.querySelectorAll('[aria-invalid]').forEach(function (el) { el.removeAttribute('aria-invalid'); });
-      if (!form.querySelector('input[name="class"]:checked')) missing.push('수업');
-      if (!date.value) { missing.push('날짜'); date.setAttribute('aria-invalid', 'true'); }
-      else if (new Date(date.value + 'T00:00').getDay() === 0) { msg.textContent = '일요일은 쉬어요. 다른 날을 골라 주세요.'; msg.className = 'form-msg err'; date.setAttribute('aria-invalid', 'true'); date.focus(); return; }
-      if (!form.querySelector('input[name="time"]:checked')) missing.push('시간대');
+      if (!form.querySelector('input[name="class"]:checked')) miss('수업', form.querySelector('input[name="class"]'));
+      var day = date.value ? new Date(date.value + 'T00:00').getDay() : null;
+      if (!date.value) { miss('날짜', date); date.setAttribute('aria-invalid', 'true'); }
+      else if (day === 0) { msg.textContent = '일요일은 쉬어요. 다른 날을 골라 주세요.'; msg.className = 'form-msg err'; date.setAttribute('aria-invalid', 'true'); date.focus(); return; }
+      var timeEl = form.querySelector('input[name="time"]:checked');
+      if (!timeEl) miss('시간대', form.querySelector('input[name="time"]'));
+      else if (day === 6 && timeEl.value === '저녁') { msg.textContent = '토요일은 17시까지 열어요. 오전이나 오후를 골라 주세요.'; msg.className = 'form-msg err'; timeEl.focus(); return; }
       ['t-name', 't-phone'].forEach(function (id) {
         var el = document.getElementById(id);
-        if (!el.value.trim()) { missing.push(el.dataset.label); el.setAttribute('aria-invalid', 'true'); }
+        if (!el.value.trim()) { miss(el.dataset.label, el); el.setAttribute('aria-invalid', 'true'); }
       });
-      if (!document.getElementById('t-agree').checked) missing.push('개인정보 동의');
+      if (!document.getElementById('t-agree').checked) miss('개인정보 동의', document.getElementById('t-agree'));
       if (missing.length) {
         msg.textContent = '아직 비어 있는 항목이 있어요: ' + missing.join(', ');
         msg.className = 'form-msg err';
-        var first = form.querySelector('[aria-invalid="true"]');
-        if (first) first.focus();
+        first.focus();
         return;
       }
       var cls = form.querySelector('input[name="class"]:checked').value;

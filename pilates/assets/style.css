@@ -225,7 +225,7 @@ body.has-bar { padding-bottom: 72px; }
   .row p { grid-column: auto; }
   .row:hover h3 { transform: translateX(12px); }
   .row-thumb {
-    display: block; position: absolute; right: 18%; top: 50%; width: 200px; z-index: 2; pointer-events: none;
+    display: block; position: absolute; left: calc(50% - 252px); top: 50%; width: 200px; z-index: 2; pointer-events: none;
     opacity: 0; transform: translateY(-46%) scale(.96); transition: opacity .35s, transform .5s var(--ease);
   }
   .row:hover .row-thumb { opacity: 1; transform: translateY(-50%) scale(1); }
@@ -349,6 +349,8 @@ body.has-bar { padding-bottom: 72px; }
 /* ---------- Form (trial booking) ---------- */
 .form-grid { display: grid; gap: 64px; }
 @media (min-width: 900px) { .form-grid { grid-template-columns: 4fr 7fr; column-gap: 6vw; } }
+.trial-photo { display: none; }
+@media (min-width: 900px) { .trial-photo { display: block; margin-top: 48px; } }
 .form { display: grid; gap: 32px; }
 fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 12px; }
 legend, .field label { font-size: var(--t-small); padding: 0; margin-bottom: 4px; }
